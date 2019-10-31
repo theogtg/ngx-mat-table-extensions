@@ -5,7 +5,7 @@ export const dataFilter = <T>(data: Array<T>, filter: HttpDataSourceFilter) => {
 
   return data.filter((post: T) => {
     if (typeof post[filter.fieldName] === 'string') {
-      return post[filter.fieldName].indexOf(filter.value) > 1;
+      return post[filter.fieldName].indexOf(filter.value) >= 0;
     } else {
       return +post[filter.fieldName] === +filter.value;
     }
