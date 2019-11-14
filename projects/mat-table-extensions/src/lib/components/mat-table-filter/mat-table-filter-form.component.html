@@ -1,16 +1,27 @@
 <div *ngIf="filterFields && filterFields.length; else noFields" class="filter-form">
   <mat-form-field class="filter--field-selector">
-    <mat-select [formControl]="filterFieldNameFromControl" placeholder="Filtered field">
+    <mat-select [formControl]="filterFieldNameFromControl" placeholder="Filters">
       <mat-option *ngFor="let field of filterFields" [value]="field">
-        {{field}}
+        <span *ngIf="field === 'segment_name'">
+          Custom Audience
+        </span>
+        <span *ngIf="field === 'count'">
+          Estimated Households
+        </span>
+        <span *ngIf="field === 'percent'">
+          Percent of Total Audience
+        </span>
+        <span *ngIf="field === 'price'">
+          Price
+        </span>
       </mat-option>
     </mat-select>
   </mat-form-field>
 
   <mat-form-field class="filter--field-value">
-    <input matInput name="filter" [formControl]="filterValueFormControl" placeholder="Filter">
+    <input matInput name="filter" [formControl]="filterValueFormControl" placeholder="Search">
     <button mat-button *ngIf="filterValueFormControl.value.length" matSuffix mat-icon-button aria-label="Clear" (click)="filterValueFormControl.patchValue('')">
-      <mat-icon>close</mat-icon>
+      <mat-icon svgIcon="close"></mat-icon>
     </button>
   </mat-form-field>
 </div>

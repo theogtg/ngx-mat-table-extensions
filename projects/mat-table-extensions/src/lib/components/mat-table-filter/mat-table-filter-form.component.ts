@@ -1,11 +1,18 @@
-import {ChangeDetectionStrategy, Component, Input, OnChanges, OnInit, Output} from '@angular/core';
-import {FormControl} from '@angular/forms';
-import {combineLatest, Observable} from 'rxjs';
-import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
-import {HttpDataSourceFilter} from '../../models/data-source-service.model';
-import {HttpDataSource} from '../../data-sources/http.data-source';
-
-
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  Output
+} from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { MatIconRegistry } from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
+import { combineLatest, Observable } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+import { HttpDataSourceFilter } from '../../models/data-source-service.model';
+import { HttpDataSource } from '../../data-sources/http.data-source';
 
 @Component({
   selector: 'mat-table-filter-form',
@@ -14,8 +21,6 @@ import {HttpDataSource} from '../../data-sources/http.data-source';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MatTableFilterFormComponent implements OnInit, OnChanges {
-
-
   @Input() filterFields = [];
   @Input() httpDataSource: HttpDataSource<any>;
 
@@ -30,11 +35,14 @@ export class MatTableFilterFormComponent implements OnInit, OnChanges {
       distinctUntilChanged()
     ),
     this.filterFieldNameFromControl.valueChanges
-  ).pipe(
-    map(([value, fieldName]) => ({value, fieldName}))
-  );
+  ).pipe(map(([value, fieldName]) => ({ value, fieldName })));
 
-  constructor() { }
+  constructor(iconRegistry: MatIconRegistry, sanitizer: DomSanitizer) {
+    iconRegistry.addSvgIcon(
+      'close',
+      sanitizer.bypassSecurityTrustResourceUrl('../../../assets/close-24px.svg')
+    );
+  }
 
   ngOnInit() {
     this.filterChange.subscribe(filter => this.httpDataSource.filter(filter));
@@ -42,10 +50,11 @@ export class MatTableFilterFormComponent implements OnInit, OnChanges {
 
   ngOnChanges() {
     if (this.filterFields && this.filterFields.length) {
-      setTimeout(() =>  this.filterFieldNameFromControl.setValue(this.filterFields[0]));
+      setTimeout(() =>
+        this.filterFieldNameFromControl.setValue(this.filterFields[0])
+      );
     } else {
       console.warn('mat-table-filter-form requires field names to filter by');
     }
   }
-
 }
